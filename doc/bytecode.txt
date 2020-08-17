@@ -1,0 +1,100 @@
+-- int a = 1;
+
+CREATE SCOPE -- compilation-unit --> push a new scope on the scope-stack
+DECLARE INT a 0 -- var_decl --> var_decl.0 = INT is datatype int, var_decl.1 = a is variable name, 0 is default value for int
+PUSH 1
+ASSIGN a --> var_decl.1 = a is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+DELETE SCOPE -- delete the topmost scope from the scope stack
+
+
+
+
+
+
+-- int a = 1 + 2;
+
+CREATE SCOPE -- compilation-unit --> push a new scope on the scope-stack
+DECLARE INT a 0 -- var_decl --> var_decl.0 = INT is datatype int, var_decl.1 = a is variable name, 0 is default value for int
+
+-- BinaryOperation 
+PUSH 1 --> PUSH Wert von BinaryOperation.0 auf den Stack
+PUSH 2 --> PUSH Wert von BinaryOperation.2 auf den Stack
+ADD --> POP 2 Stack elemente, addiere gepoppte stack elemente und lege Ergebnis auf den Stack
+
+ASSIGN a --> var_decl.1 = a is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+DELETE SCOPE -- delete the topmost scope from the scope stack
+
+
+
+
+
+-- int a = 1; 
+-- int b = a + 21;
+
+CREATE SCOPE -- compilation-unit --> push a new scope on the scope-stack
+DECLARE INT a 0 -- var_decl --> var_decl.0 = INT is datatype int, var_decl.1 = a is variable name, 0 is default value for int
+PUSH 1
+ASSIGN a --> var_decl.1 = a is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+
+DECLARE INT b 0 -- var_decl --> var_decl.0 = INT is datatype int, var_decl.1 = b is variable name, 0 is default value for int
+
+-- BinaryOperation 
+PUSH a --> PUSH Wert von BinaryOperation.0 auf den Stack, BinaryOperation.0 == Identifier a, suche wert von Identifier a im ganzen scope stack
+PUSH 21 --> PUSH Wert von BinaryOperation.2 auf den Stack
+ADD --> POP 2 Stack elemente, addiere gepoppte stack elemente und lege Ergebnis auf den Stack
+
+ASSIGN b --> var_decl.1 = b is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+
+DELETE SCOPE -- delete the topmost scope from the scope stack
+
+
+
+
+
+-- int a = 17;
+-- a = 19;
+
+CREATE SCOPE -- compilation-unit --> push a new scope on the scope-stack
+
+DECLARE INT a 0 --  var_decl --> var_decl.0 = INT is datatype int, var_decl.1 = a is variable name, 0 is default value for int
+PUSH 17
+ASSIGN a --> var_decl.1 = a is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+
+-- var_assignment --> 
+PUSH 19 --> PUSH wert von var_assignment.1 == 19
+ASSIGN a --> a == var_assignment.0
+
+DELETE SCOPE -- delete the topmost scope from the scope stack
+
+
+
+
+
+
+-- int a = 1;
+-- if (a > 0) { int b = 1; } else { int c = 2; }
+
+CREATE SCOPE -- compilation-unit -->  push a new scope on the scope-stack
+
+DECLARE INT a 0 -- var_decl -->  -- var_decl.0 = INT is datatype int, var_decl.1 = a is variable name, 0 is default value for int
+PUSH 1
+ASSIGN a --> var_decl.1 = a is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+
+PUSH value_of(a)
+PUSH 0
+GT -- performs a greater than comparison between the two topmost elements on the stack, sets the comparison flag to 1 if true, or 0 if false
+JNSET XXX -- JNSET = jump if not set, advance PC to XXX if the comparison flag is not set, otherwise if comparision flag is set advance PC by 1
+
+CREATE SCOPE -- push a new scope on the scope-stack
+DECLARE INT b 0 -- var_decl --> var_decl.0 = INT is datatype int, var_decl.1 = b is variable name, 0 is default value for int
+PUSH 1
+ASSIGN b --> var_decl.1 = b is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+DELETE SCOPE -- delete the topmost scope from the scope stack
+
+XXX: CREATE SCOPE -- Label: XXX, push a new scope on the scope-stack
+DECLARE INT c 0 -- var_decl --> -- var_decl.0 = INT is datatype int, var_decl.1 = c is variable name, 0 is default value for int
+PUSH 2
+ASSIGN c --> var_decl.1 = c is variable name, ASSIGN weißt das oberste Stack element an die Variable zu und poppt das oberste Stack Element weg
+DELETE SCOPE -- delete the topmost scope from the scope stack
+
+
